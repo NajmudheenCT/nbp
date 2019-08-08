@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Huawei Technologies Co., Ltd. All Rights Reserved.
+// Copyright 2017 The OpenSDS Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import (
 type Client interface {
 	pb.ProvisionDockClient
 	pb.AttachDockClient
+	pb.FileShareDockClient
 
 	Connect(edp string) error
 
@@ -39,6 +40,7 @@ type Client interface {
 type client struct {
 	pb.ProvisionDockClient
 	pb.AttachDockClient
+	pb.FileShareDockClient
 	*grpc.ClientConn
 }
 
@@ -52,6 +54,7 @@ func (c *client) Connect(edp string) error {
 		return err
 	}
 	// Create dock client via the connection.
+	c.FileShareDockClient = pb.NewFileShareDockClient(conn)
 	c.ProvisionDockClient = pb.NewProvisionDockClient(conn)
 	c.AttachDockClient = pb.NewAttachDockClient(conn)
 	c.ClientConn = conn
